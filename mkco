@@ -3,21 +3,28 @@
 # Program : Make My Code
 # Author : Chauncey Yan
 # Description : Make the sample code for different code(C,Bash,Perl)
-# Revision : 0.1
+# Revision : 0.2
 # Date : May 22st
-# Update : 
+# Update : Added function to distinguish the path and file name
 # Known issue : 
 #############################################################################
 # Initialization :
 #############################################################################
-filename=$1
+filepath=$1
+# stripped the function to distinguish the path and file name for no reason
+slash=`echo $1 | grep "/"` 
+if [[ -n $slash ]];then
+	filename=`echo $1 | awk -F'/' '{print $NF}'`
+	filedir=`echo $1 | awk -F'/' '{for (i=0;i<NF;i++) print $i }'`
+	echo fn:$filename fd:$filedir fp:$filepath
+fi
 
 #############################################################################
 # Function : 
 #############################################################################
-function mline(){
+function longline(){
   	for i in `seq 1 $1`; do
-		echo -n "$commentc" >> $filename
+		echo -n "$commentc" >> $filepath
 	done
 }
 
@@ -25,9 +32,9 @@ function mline(){
 # Main
 #############################################################################
 
-if [[ -n $1 ]];then
-	if [[ -e $1 ]];then
-		echo $1 exists. Overwrite it? y/n
+if [[ -n $filepath ]];then
+	if [[ -e $filepath ]];then
+		echo $filepath exists. Overwrite it? y/n
 		read input
 		if [ $input != 'y' ] && [ $input != "yes" ];then
 			exit
@@ -54,19 +61,19 @@ if [[ -n $1 ]];then
 		exit
 	fi
 	# Make a new file
-	echo -n -e $shebang > $1
-	echo -n "$commentb" >> $1
-	mline 100
-	echo >> $1
-	echo -e "$commentc" Program'\t': >> $1
-	echo -e "$commentc" Author'\t': Chauncey Yan >> $1
-	echo -e "$commentc" Functions'\t': >> $1
-	echo -e "$commentc" Revison'\t': 0.1 >> $1
-	echo -e "$commentc" Mod date'\t': May 22st >> $1
-	echo -e "$commentc" Updates'\t':  >> $1
-	echo -e "$commentc" Issues'\t':  >> $1
-	mline 100
-	echo "$commentd" >> $1
+	echo -n -e $shebang > $filepath
+	echo -n "$commentb" >> $filepath
+	longline 100
+	echo >> $filepath
+	echo -e "$commentc" Program'\t': >> $filepath
+	echo -e "$commentc" Author'\t': Chauncey Yan >> $filepath
+	echo -e "$commentc" Functions'\t': >> $filepath
+	echo -e "$commentc" Revison'\t': 0.1 >> $filepath
+	echo -e "$commentc" Mod date'\t': May 22st >> $filepath
+	echo -e "$commentc" Updates'\t':  >> $filepath
+	echo -e "$commentc" Issues'\t':  >> $filepath
+	longline 100
+	echo "$commentd" >> $filepath
 else
 	echo Please provide a name for the file and an file type.
 	echo "EXAMPLE: mkmyco -c(C/C++) -b(Bash) -p(Perl)"
@@ -74,7 +81,7 @@ else
 fi
 # Check if there is a shebang and chmod to excutable accordingly
 if [[ -n $shebang ]];then
-	chmod 755 $1
+	chmod 755 $filepath
 fi
 
 
