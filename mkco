@@ -1,0 +1,81 @@
+#!/bin/bash
+#############################################################################
+# Program : Make My Code
+# Author : Chauncey Yan
+# Description : Make the sample code for different code(C,Bash,Perl)
+# Revision : 0.1
+# Date : May 22st
+# Update : 
+# Known issue : 
+#############################################################################
+# Initialization :
+#############################################################################
+filename=$1
+
+#############################################################################
+# Function : 
+#############################################################################
+function mline(){
+  	for i in `seq 1 $1`; do
+		echo -n "$commentc" >> $filename
+	done
+}
+
+#############################################################################
+# Main
+#############################################################################
+
+if [[ -n $1 ]];then
+	if [[ -e $1 ]];then
+		echo $1 exists. Overwrite it? y/n
+		read input
+		if [ $input != 'y' ] && [ $input != "yes" ];then
+			exit
+		fi
+	fi
+	if [[ $2 == 'b' ]];then
+		shebang="#!/bin/bashi\n"
+		commenta='#'
+		commentb='#'
+		commentc='#'
+	elif [[ $2 == 'p' ]];then
+		shebang="#!/wv/pevtools/aoi/bin/perl\n"
+		commenta='#'
+		commentb='#'
+		commentc='#'
+	elif [[ $2 == 'c' ]];then
+		commenta="//"
+		commentb="/*"
+		commentc="*"
+		commentd="*/"
+	else
+		echo Supported arguments:
+		echo "mkmyco -c(C/C++) -b(Bash) -p(Perl)"
+		exit
+	fi
+	# Make a new file
+	echo -n -e $shebang > $1
+	echo -n "$commentb" >> $1
+	mline 100
+	echo >> $1
+	echo -e "$commentc" Program'\t': >> $1
+	echo -e "$commentc" Author'\t': Chauncey Yan >> $1
+	echo -e "$commentc" Functions'\t': >> $1
+	echo -e "$commentc" Revison'\t': 0.1 >> $1
+	echo -e "$commentc" Mod date'\t': May 22st >> $1
+	echo -e "$commentc" Updates'\t':  >> $1
+	echo -e "$commentc" Issues'\t':  >> $1
+	mline 100
+	echo "$commentd" >> $1
+else
+	echo Please provide a name for the file and an file type.
+	echo "EXAMPLE: mkmyco -c(C/C++) -b(Bash) -p(Perl)"
+	exit
+fi
+# Check if there is a shebang and chmod to excutable accordingly
+if [[ -n $shebang ]];then
+	chmod 755 $1
+fi
+
+
+
